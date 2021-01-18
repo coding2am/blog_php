@@ -41,7 +41,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <!-- SEARCH FORM -->
       <form action="index.php" method="post" class="form-inline ml-3">
         <div class="input-group input-group-sm">
-          <input name="search" class="form-control form-control-navbar" type="search" placeholder="Search"
+          <input name="search" class="form-control form-control-navbar" type="search" placeholder="Search for blogs"
             aria-label="Search" />
           <div class="input-group-append">
             <button class="btn btn-navbar" type="submit">
@@ -84,10 +84,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <nav class="mt-2">
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <li class="nav-item">
-              <a href="#" class="nav-link">
+              <a href="index.php" class="nav-link">
                 <i class="nav-icon fas fa-th"></i>
                 <p>
                   Blogs
+                  <span class="right badge badge-success">New</span>
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="users.php" class="nav-link">
+                <i class="nav-icon fas fa-user"></i>
+                <p>
+                  Users
                   <span class="right badge badge-success">New</span>
                 </p>
               </a>

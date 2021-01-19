@@ -4,6 +4,18 @@ require_once('../config/dbconnect.php');
 if (empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])) {
   header('Location: login.php');
 }
+if ($_SESSION['role'] != 1) {
+  header('Location: login.php');
+}
+
+if (isset($_POST['search'])) {
+  setcookie('search', $_POST['search'], time() + (86400 * 30), "/");
+} else {
+  if (empty($_GET['pageno'])) {
+    unset($_COOKIE['search']);
+    setcookie('search', null, -1, '/');
+  }
+}
 ?>
 
 <?php require_once('../layouts/backend/admin_body.php'); ?>
@@ -19,7 +31,7 @@ if (empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])) {
           <!-- /.card-header -->
           <div class="card-body">
             <div>
-              <a href="user_add.php" class="btn btn-sm btn-success m-2">Add new</a>
+              <a href="user_add.php" class="btn btn-sm btn-success m-2">Add new user</a>
             </div>
             <table class="table table-bordered">
               <thead>
@@ -43,7 +55,7 @@ if (empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])) {
                 $numberOfRecords = 3;
                 $offset = ($pageno - 1) * $numberOfRecords;
 
-                if (empty($_POST['search'])) {
+                if (empty($_POST['search']) && empty($_COOKIE['search'])) {
                   $qry = "SELECT * FROM users ORDER BY id DESC";
                   $stmt = $pdo->prepare($qry);
                   $stmt->execute();
@@ -55,7 +67,7 @@ if (empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])) {
                   $limitStmt->execute();
                   $limitResults = $limitStmt->fetchAll();
                 } else {
-                  $searchKey = $_POST['search'];
+                  $searchKey = isset($_POST['search']) ? $_POST['search'] : $_COOKIE['search'];
                   $searchQry = "SELECT * FROM users WHERE name LIKE '%$searchKey%' ORDER BY id DESC";
                   $searchStmt = $pdo->prepare($searchQry);
                   $searchStmt->execute();
@@ -84,7 +96,7 @@ if (empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])) {
                           } ?></td>
                   <td>
                     <div class="btn-group">
-                      <a href="user_edit.php?id=<?= $user['id']; ?>" class="btn btn-sm btn-info">Edit</a>
+                      <a href="user_edit.php?id=<?= $user['id']; ?>" class="btn btn-sm btn-dark">Edit</a>
                       <a href="user_delete.php?id=<?= $user['id']; ?>" class="btn btn-sm btn-danger"
                         onClick="return confirm('Are you sure you want to delete this ?')">Delete</a>
                     </div>

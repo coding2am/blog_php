@@ -4,12 +4,22 @@ require_once('../config/dbconnect.php');
 if (empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])) {
   header('Location: login.php');
 }
+if ($_SESSION['role'] != 1) {
+  header('Location: login.php');
+}
 
 //inserting process
 if ($_POST) {
   $email = $_POST['email'];
   $name = $_POST['name'];
   $password = $_POST['password'];
+  $role = $_POST['role'];
+
+  if ($role == "admin") {
+    $permit_role = 1;
+  } else {
+    $permit_role = 0;
+  }
 
   $qry = "SELECT * FROM users WHERE email=:email";
   $stmt = $pdo->prepare($qry);
@@ -21,13 +31,14 @@ if ($_POST) {
   if ($user) {
     echo "<script>alert('Email is already has been used! Try another email.')</script>";
   } else {
-    $insertQry = "INSERT INTO users(name,password,email) VALUES (:name,:password,:email)";
+    $insertQry = "INSERT INTO users(name,password,email,role) VALUES (:name,:password,:email,:role)";
     $stmt = $pdo->prepare($insertQry);
     $result = $stmt->execute(
       array(
         ':name' => $name,
         ':email' => $email,
         ':password' => $password,
+        ':role' => $permit_role,
       )
     );
 
@@ -58,7 +69,13 @@ if ($_POST) {
           <label for="password">Password</label>
           <input type="password" id="password" name="password" class="form-control" required>
         </div>
-        <div class="form-group">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" name="role" value="admin" id="defaultCheck1">
+          <label class="form-check-label" for="defaultCheck1">
+            Admin Role
+          </label>
+        </div>
+        <div class="form-group mt-4">
           <input type="submit" class="btn btn-success" value="Create">
           <a href="index.php" class="btn btn-info">Back</a>
         </div>

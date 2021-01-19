@@ -16,6 +16,7 @@ if (!empty($_POST)) {
       $_SESSION['user_id'] = $user['id'];
       $_SESSION['logged_in'] = time();
       $_SESSION['username'] = $user['name'];
+      $_SESSION['role'] = $user['role'];
 
       header('Location: index.php');
     }

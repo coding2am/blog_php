@@ -38,10 +38,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </li>
       </ul>
 
+      <?php
+      $url = $_SERVER['PHP_SELF'];
+      $url_array = explode('/', $url);
+      $current_page = end($url_array);
+      ?>
       <!-- SEARCH FORM -->
-      <form action="index.php" method="post" class="form-inline ml-3">
+      <form action="<?= $current_page == 'index.php' ? 'index.php' : 'users.php'; ?>" method="post"
+        class="form-inline ml-3">
         <div class="input-group input-group-sm">
-          <input name="search" class="form-control form-control-navbar" type="search" placeholder="Search for blogs"
+          <input name="search" class="form-control form-control-navbar" type="search" placeholder="Search"
             aria-label="Search" />
           <div class="input-group-append">
             <button class="btn btn-navbar" type="submit">

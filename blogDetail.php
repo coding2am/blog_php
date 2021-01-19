@@ -17,13 +17,17 @@ $comment_stmt = $pdo->prepare($commentQry);
 $comment_stmt->execute();
 $comments = $comment_stmt->fetchAll();
 
+$authors = [];
+
+
 if (!empty($comments)) {
-  $author_id = $comments[0]['author_id'];
-  $authorQry = "SELECT * FROM users WHERE id=$author_id";
-  $author_stmt = $pdo->prepare($authorQry);
-  $author_stmt->execute();
-  $author  = $author_stmt->fetchAll();
-  $authorName = $author[0]['name'];
+  foreach ($comments as $key => $value) {
+    $author_id = $comments[$key]['author_id'];
+    $authorQry = "SELECT * FROM users WHERE id=$author_id";
+    $author_stmt = $pdo->prepare($authorQry);
+    $author_stmt->execute();
+    $authors[]  = $author_stmt->fetchAll();
+  }
 }
 
 
@@ -51,7 +55,7 @@ if ($_POST) {
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 3 | Widgets</title>
+  <title>Detail Page</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Font Awesome -->
@@ -63,13 +67,32 @@ if ($_POST) {
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 </head>
+<style>
+.detailImage {
+  height: 30rem;
+  border: 1px solid black;
+  border-radius: 2%;
+  cursor: pointer;
+  transition: all 1s ease;
+}
+
+.detailImage:hover {
+  opacity: 0.9;
+  transform: scale(1.05);
+}
+
+.content {
+  text-indent: 5rem;
+  text-align: justify;
+}
+</style>
 
 <body class="hold-transition sidebar-mini">
   <div class="wrapper">
     <!-- Content Wrapper. Contains page content -->
     <div class="">
       <!-- Main content -->
-      <div class="container">
+      <div class="container mt-5">
         <div class="col-md-12">
           <!-- Box Comment -->
           <div class="card card-widget">
@@ -83,12 +106,19 @@ if ($_POST) {
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-              <img class="img-fluid pad" src="<?= $post[0]['image']; ?>" alt="Photo">
-
-              <p><?= $post[0]['content']; ?></p>
-              <button type="button" class="btn btn-default btn-sm"><i class="fas fa-share"></i> Share</button>
-              <button type="button" class="btn btn-default btn-sm"><i class="far fa-thumbs-up"></i> Like</button>
-              <span class="float-right text-muted">127 likes - 3 comments</span>
+              <div class="row">
+                <div class="col-md-6">
+                  <img class="img-fluid pad detailImage" src="<?= $post[0]['image']; ?>" alt="Photo">
+                </div>
+                <div class="col-md-6">
+                  <p class="content"><?= $post[0]['content']; ?></p>
+                </div>
+              </div>
+              <div class="mt-3">
+                <button type="button" class="btn btn-default btn-sm"><i class="fas fa-share"></i> Share</button>
+                <button type="button" class="btn btn-default btn-sm"><i class="far fa-thumbs-up"></i> Like</button>
+                <span class="ml-2 text-muted">127 likes - 3 comments</span>
+              </div>
             </div>
             <!-- /.card-body -->
             <div class="card-footer card-comments">
@@ -96,10 +126,10 @@ if ($_POST) {
                 <!-- User image -->
 
                 <?php if ($comments) {
-                  foreach ($comments as $comment) { ?>
+                  foreach ($comments as $key => $comment) { ?>
                 <div class="comment-text" style="margin-left:0 !important;">
                   <span class="username">
-                    <?= $authorName ?>
+                    <?= $authors[$key][0]['name']; ?>
                     <span class="text-muted float-right">8:03 PM Today</span>
                   </span><!-- /.username -->
                   <?= $comment['content'] ?>

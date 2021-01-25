@@ -32,19 +32,24 @@ if (!empty($comments)) {
 
 
 if ($_POST) {
-  $comment = $_POST['comment'];
-  $insertQry = "INSERT INTO comments(content,author_id,post_id) VALUES (:content,:author_id,:post_id)";
-  $stmt = $pdo->prepare($insertQry);
-  $result = $stmt->execute(
-    array(
-      ':content' => $comment,
-      ':author_id' => $_SESSION['user_id'],
-      ':post_id' => $id,
-    )
-  );
 
-  if ($result) {
-    header("Location:blogDetail.php?id=" . $id);
+  if (empty($_POST['comment'])) {
+    $commentError = "Please write something!";
+  } else {
+    $comment = $_POST['comment'];
+    $insertQry = "INSERT INTO comments(content,author_id,post_id) VALUES (:content,:author_id,:post_id)";
+    $stmt = $pdo->prepare($insertQry);
+    $result = $stmt->execute(
+      array(
+        ':content' => $comment,
+        ':author_id' => $_SESSION['user_id'],
+        ':post_id' => $id,
+      )
+    );
+
+    if ($result) {
+      header("Location:blogDetail.php?id=" . $id);
+    }
   }
 }
 
@@ -148,6 +153,7 @@ if ($_POST) {
                   <input type="text" name="comment" class="form-control form-control-sm"
                     placeholder="Press enter to post comment">
                 </div>
+                <small class="text-danger"><?= empty($commentError) ? '' : $commentError; ?></small>
               </form>
             </div>
             <!-- /.card-footer -->

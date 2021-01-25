@@ -3,32 +3,48 @@ session_start();
 require_once("config/dbconnect.php");
 
 if ($_POST) {
-  $email = $_POST['email'];
-  $name = $_POST['name'];
-  $password = $_POST['password'];
+  if (empty($_POST['name']) || empty($_POST['email']) || empty($_POST['password']) || strlen($_POST['password']) < 4) {
+    if (empty($_POST['name'])) {
+      $nameError = "Name can't be empty!";
+    }
+    if (empty($_POST['email'])) {
+      $emailError = "E-mail can't be empty!";
+    }
+    if (empty($_POST['password'])) {
+      $passwordError = "Password can't be empty!";
+    }
 
-  $qry = "SELECT * FROM users WHERE email=:email";
-  $stmt = $pdo->prepare($qry);
-  $stmt->bindValue(':email', $email);
-  $stmt->execute();
-
-  $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-  if ($user) {
-    echo "<script>alert('Email is already has been used! Try another email.')</script>";
+    if (strlen($_POST['password']) < 4) {
+      $passwordError = "Passsword should be 4 characters atleast!";
+    }
   } else {
-    $insertQry = "INSERT INTO users(name,password,email) VALUES (:name,:password,:email)";
-    $stmt = $pdo->prepare($insertQry);
-    $result = $stmt->execute(
-      array(
-        ':name' => $name,
-        ':email' => $email,
-        ':password' => $password,
-      )
-    );
+    $email = $_POST['email'];
+    $name = $_POST['name'];
+    $password = $_POST['password'];
 
-    if ($result) {
-      echo "<script>alert('Register Successfully!');window.location.href='login.php';</script>";
+    $qry = "SELECT * FROM users WHERE email=:email";
+    $stmt = $pdo->prepare($qry);
+    $stmt->bindValue(':email', $email);
+    $stmt->execute();
+
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($user) {
+      echo "<script>alert('Email is already has been used! Try another email.')</script>";
+    } else {
+      $insertQry = "INSERT INTO users(name,password,email) VALUES (:name,:password,:email)";
+      $stmt = $pdo->prepare($insertQry);
+      $result = $stmt->execute(
+        array(
+          ':name' => $name,
+          ':email' => $email,
+          ':password' => $password,
+        )
+      );
+
+      if ($result) {
+        echo "<script>alert('Register Successfully!');window.location.href='login.php';</script>";
+      }
     }
   }
 }
@@ -67,6 +83,7 @@ if ($_POST) {
         <p class="login-box-msg">Register and become a member.</p>
 
         <form action="register.php" method="post">
+
           <div class="input-group mb-3">
             <input type="email" name="email" class="form-control" placeholder="Email">
             <div class="input-group-append">
@@ -83,12 +100,25 @@ if ($_POST) {
               </div>
             </div>
           </div>
+
           <div class="input-group mb-3">
             <input type="password" name="password" class="form-control" placeholder="Password">
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-lock"></span>
               </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <div>
+              <small class="text-danger"><?= empty($emailError) ? '' : $emailError; ?></small>
+            </div>
+            <div>
+              <small class="text-danger"><?= empty($nameError) ? '' : $nameError; ?></small>
+            </div>
+            <div>
+              <small class="text-danger"><?= empty($passwordError) ? '' : $passwordError; ?></small>
             </div>
           </div>
           <div class="row">

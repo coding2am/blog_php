@@ -30,6 +30,7 @@ if ($_POST) {
     $email = $_POST['email'];
     $name = $_POST['name'];
     $password = $_POST['password'];
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
     if (isset($_POST['role'])) {
       $permit_role = 1;
     } else {

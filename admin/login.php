@@ -12,15 +12,16 @@ if (!empty($_POST)) {
   $stmt->execute();
   $user = $stmt->fetch(PDO::FETCH_ASSOC);
   if ($user) {
-    if ($user['password'] == $password) {
+    if (password_verify($password, $user['password'])) {
       $_SESSION['user_id'] = $user['id'];
       $_SESSION['logged_in'] = time();
       $_SESSION['username'] = $user['name'];
       $_SESSION['role'] = $user['role'];
 
       header('Location: index.php');
+    } else {
+      echo "<script>alert('Password incorrect!.')</script>";
     }
-    echo "<script>alert('Password incorrect!.')</script>";
   } else {
     echo "<script>alert('There is no user with that email.')</script>";
   }

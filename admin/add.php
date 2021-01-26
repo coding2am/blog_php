@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once('../config/dbconnect.php');
+require_once('../config/common.php');
 if (empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])) {
   header('Location: login.php');
 }
@@ -53,6 +54,7 @@ if ($_POST) {
     </div>
     <div class="card-body">
       <form action="add.php" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="_token" value="<?php echo $_SESSION['_token']; ?>">
         <div class="form-group">
           <label for="title">Titile</label>
           <span class="text-danger ml-2"><?= empty($titleError) ? '' : $titleError; ?></span>

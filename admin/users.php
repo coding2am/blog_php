@@ -1,6 +1,8 @@
 <?php
 session_start();
 require_once('../config/dbconnect.php');
+require_once('../config/common.php');
+
 if (empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])) {
   header('Location: login.php');
 }
@@ -87,8 +89,8 @@ if (isset($_POST['search'])) {
                   foreach ($limitResults as $user) { ?>
                 <tr>
                   <td><?= $num++; ?></td>
-                  <td><?= $user['name']; ?></td>
-                  <td><?= $user['email']; ?></td>
+                  <td><?= escape($user['name']); ?></td>
+                  <td><?= escape($user['email']); ?></td>
                   <td><?php if ($user['role'] == 0) {
                             echo 'user';
                           } else {

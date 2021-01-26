@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once('../config/dbconnect.php');
+require_once('../config/common.php');
 if (empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])) {
   header('Location: login.php');
 }
@@ -71,21 +72,23 @@ if ($_POST) {
 <div class="content">
   <div class="card p-3">
     <div class="card-header">
-      <h2>Create New Post</h2>
+      <h2>Edit Post</h2>
     </div>
     <div class="card-body">
       <form action="" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="_token" value="<?php echo $_SESSION['_token']; ?>">
         <div class="form-group">
           <label for="title">Titile</label>
           <span class="text-danger ml-2"><?= empty($titleError) ? '' : $titleError; ?></span>
           <input type="hidden" name="id" value="<?= $post[0]['id'] ?>">
           <input type="hidden" name="oldPhoto" value="<?= $post[0]['image'] ?>">
-          <input type="text" name="title" class="form-control" id="title" value="<?= $post[0]['title']; ?>">
+          <input type="text" name="title" class="form-control" id="title" value="<?= escape($post[0]['title']); ?>">
         </div>
         <div class="form-group">
           <label for="content">Content</label>
           <span class="text-danger ml-2"><?= empty($contentError) ? '' : $contentError; ?></span>
-          <textarea name="content" id="content" class="form-control" rows=10><?= $post[0]['content']; ?></textarea>
+          <textarea name="content" id="content" class="form-control"
+            rows=10><?= escape($post[0]['content']); ?></textarea>
         </div>
         <div class="form-group">
           <div class="row">

@@ -1,6 +1,8 @@
 <?php
 session_start();
 require_once('../config/dbconnect.php');
+require_once('../config/common.php');
+
 if (empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])) {
   header('Location: login.php');
 }
@@ -93,16 +95,17 @@ $user = $stmt->fetchAll();
     </div>
     <div class="card-body">
       <form action="" method="post">
+        <input type="hidden" name="_token" value="<?php echo $_SESSION['_token']; ?>">
         <div class="form-group">
           <label for="name">Name</label>
           <span class="text-danger ml-2"><?= empty($nameError) ? '' : $nameError; ?></span>
-          <input type="text" name="name" class="form-control" id="name" value="<?= $user[0]['name']; ?>">
+          <input type="text" name="name" class="form-control" id="name" value="<?= escape($user[0]['name']); ?>">
           <input type="hidden" name="id" value="<?= $user[0]['id']; ?>">
         </div>
         <div class="form-group">
           <label for="email">E-mail</label>
           <span class="text-danger ml-2"><?= empty($emailError) ? '' : $emailError; ?></span>
-          <input type="email" id="email" name="email" class="form-control" value="<?= $user[0]['email']; ?>">
+          <input type="email" id="email" name="email" class="form-control" value="<?= escape($user[0]['email']); ?>">
         </div>
         <div class="form-group">
           <label for="password">Password</label>

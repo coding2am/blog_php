@@ -1,6 +1,8 @@
 <?php
 session_start();
 require_once('config/dbconnect.php');
+require_once('config/common.php');
+
 if (empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])) {
   header('Location: login.php');
 }
@@ -104,8 +106,8 @@ if ($_POST) {
             <div class="card-header">
               <div class="card-title">
                 <!-- <img class="img-circle" src="../dist/img/user1-128x128.jpg" alt="User Image"> -->
-                <div class="username"><a href="#"><?= $post[0]['title']; ?></a></div>
-                <div class="description"><small><?= $post[0]['created_at']; ?></small></div>
+                <div class="username"><a href="#"><?= escape($post[0]['title']); ?></a></div>
+                <div class="description"><small><?= escape($post[0]['created_at']); ?></small></div>
               </div>
               <!-- /.user-block -->
             </div>
@@ -116,7 +118,7 @@ if ($_POST) {
                   <img class="img-fluid pad detailImage" src="<?= $post[0]['image']; ?>" alt="Photo">
                 </div>
                 <div class="col-md-6">
-                  <p class="content"><?= $post[0]['content']; ?></p>
+                  <p class="content"><?= escape($post[0]['content']); ?></p>
                 </div>
               </div>
               <div class="mt-3">
@@ -134,10 +136,10 @@ if ($_POST) {
                   foreach ($comments as $key => $comment) { ?>
                 <div class="comment-text" style="margin-left:0 !important;">
                   <span class="username">
-                    <?= $authors[$key][0]['name']; ?>
+                    <?= escape($authors[$key][0]['name']); ?>
                     <span class="text-muted float-right">8:03 PM Today</span>
                   </span><!-- /.username -->
-                  <?= $comment['content'] ?>
+                  <?= escape($comment['content']); ?>
                 </div>
                 <?php }
                 } ?>
@@ -148,6 +150,7 @@ if ($_POST) {
             <!-- /.card-footer -->
             <div class="card-footer">
               <form action="" method="post">
+                <input type="hidden" name="_token" value="<?php echo $_SESSION['_token']; ?>">
                 <!-- .img-push is used to add margin to elements next to floating images -->
                 <div class="img-push">
                   <input type="text" name="comment" class="form-control form-control-sm"

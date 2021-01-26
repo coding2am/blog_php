@@ -46,6 +46,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <!-- SEARCH FORM -->
       <form action="<?= $current_page == 'index.php' ? 'index.php' : 'users.php'; ?>" method="post"
         class="form-inline ml-3">
+        <input type="hidden" name="_token" value="<?php echo $_SESSION['_token']; ?>">
         <div class="input-group input-group-sm">
           <input name="search" class="form-control form-control-navbar" type="search" placeholder="Search"
             aria-label="Search" />
@@ -90,7 +91,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <nav class="mt-2">
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <li class="nav-item">
-              <a href="index.php" class="nav-link">
+              <a href="/admin/index.php" class="nav-link">
                 <i class="nav-icon fas fa-th"></i>
                 <p>
                   Blogs
@@ -99,7 +100,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </a>
             </li>
             <li class="nav-item">
-              <a href="users.php" class="nav-link">
+              <a href="/admin/users.php" class="nav-link">
                 <i class="nav-icon fas fa-user"></i>
                 <p>
                   Users

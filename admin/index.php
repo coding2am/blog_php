@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once('../config/dbconnect.php');
+require_once('../config/common.php');
 if (empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])) {
   header('Location: login.php');
 }
@@ -87,12 +88,12 @@ if (isset($_POST['search'])) {
                   foreach ($limitResults as $post) { ?>
                 <tr>
                   <td><?= $num++; ?></td>
-                  <td><?= $post['title']; ?></td>
-                  <td><?= substr($post['content'], 0, 70); ?> ...</td>
+                  <td><?= escape($post['title']); ?></td>
+                  <td><?= escape(substr($post['content'], 0, 70)); ?> ...</td>
                   <td>
                     <div class="btn-group">
-                      <a href="edit.php?id=<?= $post['id']; ?>" class="btn btn-sm btn-dark">Edit</a>
-                      <a href="delete.php?id=<?= $post['id']; ?>" class="btn btn-sm btn-danger"
+                      <a href="/admin/edit.php?id=<?= $post['id']; ?>" class="btn btn-sm btn-dark">Edit</a>
+                      <a href="/admin/delete.php?id=<?= $post['id']; ?>" class="btn btn-sm btn-danger"
                         onClick="return confirm('Are you sure you want to delete this ?')">Delete</a>
                     </div>
                   </td>

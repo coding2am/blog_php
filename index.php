@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once('config/dbconnect.php');
+require_once('config/common.php');
 if (empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])) {
   header('Location: login.php');
 }
@@ -90,8 +91,8 @@ if (empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])) {
             <div class="card-header">
               <div class="card-title">
                 <!-- <img class="img-circle" src="../dist/img/user1-128x128.jpg" alt="User Image"> -->
-                <div class="username"><a href="#"><?= $value['title']; ?></a></div>
-                <div class="description"><small><?= $value['created_at']; ?></small></div>
+                <div class="username"><a href="#"><?= escape($value['title']); ?></a></div>
+                <div class="description"><small><?= escape($value['created_at']); ?></small></div>
               </div>
               <!-- /.user-block -->
             </div>
